@@ -27,5 +27,4 @@ venv/
 Thumbs.db
 
 # Experimental outputs
-results/figures/*.png
 results/figures/*.pdf

@@ -24,9 +24,9 @@ V3_SRCS = src/v3_ring_mpi/v3_ring_mpi.cpp
 V4_SRCS = $(COMMON_ATTN_SRCS) src/v4_hybrid/v4_hybrid.cpp
 ATTN_SRCS = $(COMMON_ATTN_SRCS) $(V0_SRCS) $(V1_SRCS) src/v2_openmp/v2_openmp.cpp $(V3_SRCS) src/v4_hybrid/v4_hybrid.cpp src/inference/dna_triage.cpp src/main.cpp
 
-.PHONY: all setup check test-gemm test-v2 test-v4 test-cli test test-all bench-gemm bench-v2 bench-mpi bench clean help
+.PHONY: all setup check test-gemm test-v0-v1 test-v2 test-v4 test-cli test test-all bench-gemm bench-v2 bench-mpi bench clean help
 
-all: $(BUILD_DIR)/attn $(BUILD_DIR)/test_gemm $(BUILD_DIR)/test_v2_openmp $(BUILD_DIR)/test_v4_hybrid $(BUILD_DIR)/bench_gemm $(BUILD_DIR)/bench_v2_scaling $(BUILD_DIR)/bench_pingpong
+all: $(BUILD_DIR)/attn $(BUILD_DIR)/test_gemm $(BUILD_DIR)/test_v0_v1 $(BUILD_DIR)/test_v2_openmp $(BUILD_DIR)/test_v4_hybrid $(BUILD_DIR)/bench_gemm $(BUILD_DIR)/bench_v2_scaling $(BUILD_DIR)/bench_pingpong
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -44,6 +44,9 @@ $(BUILD_DIR)/attn: $(ATTN_SRCS) src/common/gemm.hpp src/common/attention_types.h
 
 $(BUILD_DIR)/test_gemm: tests/test_gemm.cpp $(COMMON_GEMM_SRCS) src/common/gemm.hpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) tests/test_gemm.cpp $(COMMON_GEMM_SRCS) -o $@ $(LDLIBS)
+
+$(BUILD_DIR)/test_v0_v1: tests/test_v0_v1.cpp $(COMMON_ATTN_SRCS) $(V0_SRCS) $(V1_SRCS) src/common/attention_types.hpp src/common/block_attention.hpp src/v0_naive/v0_naive.hpp src/v1_blockwise/v1_blockwise.hpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) tests/test_v0_v1.cpp $(COMMON_ATTN_SRCS) $(V0_SRCS) $(V1_SRCS) -o $@ $(LDLIBS)
 
 $(BUILD_DIR)/test_v2_openmp: tests/test_v2_openmp.cpp $(V2_SRCS) src/common/gemm.hpp src/common/attention_types.hpp src/common/block_attention.hpp src/v2_openmp/v2_openmp.hpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $(OMPFLAGS) $(INCLUDES) tests/test_v2_openmp.cpp $(V2_SRCS) -o $@ $(LDLIBS)
@@ -63,6 +66,9 @@ $(BUILD_DIR)/bench_pingpong: benchmarks/mpi/bench_pingpong.cpp | $(BUILD_DIR)
 test-gemm: $(BUILD_DIR)/test_gemm
 	OPENBLAS_NUM_THREADS=1 ./$(BUILD_DIR)/test_gemm
 
+test-v0-v1: $(BUILD_DIR)/test_v0_v1
+	OPENBLAS_NUM_THREADS=1 ./$(BUILD_DIR)/test_v0_v1
+
 test-v2: $(BUILD_DIR)/test_v2_openmp
 	OPENBLAS_NUM_THREADS=1 OMP_PROC_BIND=close OMP_PLACES=cores ./$(BUILD_DIR)/test_v2_openmp
 
@@ -79,7 +85,7 @@ test-cli: $(BUILD_DIR)/attn
 	OPENBLAS_NUM_THREADS=1 OMP_PROC_BIND=close OMP_PLACES=cores mpirun --bind-to core -np 4 ./$(BUILD_DIR)/attn --version v3 --s 1024 --d 64 --c 256 --tile 64 --seed 1 --no-comm
 	OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 OMP_PROC_BIND=close OMP_PLACES=cores mpirun --map-by slot:PE=2 --bind-to core -np 2 ./$(BUILD_DIR)/attn --version v4 --s 512 --d 64 --c 256 --tile 64 --threads 2 --seed 1 --verify
 
-test: test-gemm test-v2
+test: test-gemm test-v0-v1 test-v2
 
 test-all: test test-v4 test-cli
 
@@ -99,7 +105,7 @@ help:
 	@echo "  make all          - Build attn CLI, unit tests, and benchmarks"
 	@echo "  make setup        - Create build directory"
 	@echo "  make check        - Check compiler availability"
-	@echo "  make test         - Build and run unit tests (GEMM + V2 OpenMP)"
+	@echo "  make test         - Build and run unit tests (GEMM + V0/V1 + V2 OpenMP)"
 	@echo "  make test-v4      - Build and run V4 Hybrid MPI+OpenMP unit tests (2x2 cores)"
 	@echo "  make test-cli     - Verify unified ./build/attn CLI across V0, V1, V2, V3, V4"
 	@echo "  make test-all     - Build and run all unit tests + unified CLI verification"

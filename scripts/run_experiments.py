@@ -468,6 +468,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run all Ring Attention HPC experiments.")
     parser.add_argument("--reps", type=int, default=5, help="Repetitions per configuration (Proposal min: 5)")
     args = parser.parse_args()
+    if args.reps < 1:
+        parser.error("--reps must be at least 1")
 
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     SUMMARY_DIR.mkdir(parents=True, exist_ok=True)

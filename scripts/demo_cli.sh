@@ -35,6 +35,10 @@ export OMP_PROC_BIND=close
 export OMP_PLACES=cores
 
 C_BLOCK=$(( SEQ_LEN / NP_RANKS ))
+if [[ $(( C_BLOCK * NP_RANKS )) -ne "${SEQ_LEN}" ]]; then
+  echo "[error] -- Panjang konteks s=${SEQ_LEN} harus habis dibagi P=${NP_RANKS}." >&2
+  exit 1
+fi
 
 run_side() {
   local cmd="$1"

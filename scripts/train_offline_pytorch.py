@@ -133,7 +133,8 @@ def main() -> int:
 
     x_all, y_all, samples = load_windows(manifest, args.seq_len)
 
-    # Pemisahan per bagian sampel + leave-one-line-out untuk kelas progresi (184AA2_aig)
+    # Pemisahan per bagian sampel + leave-one-line-out untuk satu lini progresi.
+    # 184AA2_aig dipilih sebagai holdout tetap agar hasil dapat direproduksi.
     train_idx: List[int] = []
     val_idx: List[int] = []
     lolo_idx: List[int] = []

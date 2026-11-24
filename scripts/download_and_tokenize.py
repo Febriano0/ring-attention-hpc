@@ -27,8 +27,12 @@ KMER_SIZE = 6
 PRJNA913438_SAMPLES: List[Tuple[str, int, str]] = [
     ("184D_normal", 0, "Normal (pra-stasis)"),
     ("184A1_immortal", 1, "Immortal (progresi)"),
+    ("184AA4_immortal", 1, "Immortal (progresi)"),
     ("184B5_immortal", 1, "Immortal (progresi)"),
     ("184AA2_aig", 1, "Immortal + AIG (progresi)"),
+    ("184AA3_aig", 1, "Immortal + AIG (progresi)"),
+    ("184B5ME_aig", 1, "Immortal + AIG (progresi)"),
+    ("184FMY2_aig", 1, "Immortal + AIG (progresi)"),
 ]
 
 # Motif 6-mer pembeda kelas yang disisipkan secara biologis realistis

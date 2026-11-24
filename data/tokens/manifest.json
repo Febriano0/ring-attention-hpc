@@ -1,0 +1,38 @@
+[
+  {
+    "sample": "184A1_immortal",
+    "label": 1,
+    "group": "Immortal (progresi)",
+    "fastq_path": "data/fastq/184A1_immortal.fastq",
+    "tokens_path": "data/tokens/184A1_immortal.bin",
+    "num_tokens": 37500,
+    "vocab_size": 4098
+  },
+  {
+    "sample": "184AA2_aig",
+    "label": 1,
+    "group": "Immortal + AIG (progresi)",
+    "fastq_path": "data/fastq/184AA2_aig.fastq",
+    "tokens_path": "data/tokens/184AA2_aig.bin",
+    "num_tokens": 37500,
+    "vocab_size": 4098
+  },
+  {
+    "sample": "184B5_immortal",
+    "label": 1,
+    "group": "Immortal (progresi)",
+    "fastq_path": "data/fastq/184B5_immortal.fastq",
+    "tokens_path": "data/tokens/184B5_immortal.bin",
+    "num_tokens": 37500,
+    "vocab_size": 4098
+  },
+  {
+    "sample": "184D_normal",
+    "label": 0,
+    "group": "Normal (pra-stasis)",
+    "fastq_path": "data/fastq/184D_normal.fastq",
+    "tokens_path": "data/tokens/184D_normal.bin",
+    "num_tokens": 37500,
+    "vocab_size": 4098
+  }
+]

@@ -1,0 +1,11 @@
+version,P,threads,scenario,s,d,c,max_abs_err,rel_err,verified
+v0,1,1,standard_normal,1024,64,256,1.991459e-07,3.241110e-07,1
+v1,1,1,standard_normal,1024,64,256,2.373691e-07,3.310406e-07,1
+v2,1,4,standard_normal,1024,64,256,2.373691e-07,3.310406e-07,1
+v3,4,1,standard_normal,1024,64,256,2.140470e-07,3.300648e-07,1
+v4,2,2,standard_normal,1024,64,512,2.373691e-07,3.305159e-07,1
+v0,1,1,stress_logits_std10,1024,64,256,1.529166e-05,1.226062e-06,1
+v1,1,1,stress_logits_std10,1024,64,256,1.514264e-05,1.225613e-06,1
+v2,1,4,stress_logits_std10,1024,64,256,1.514264e-05,1.225613e-06,1
+v3,4,1,stress_logits_std10,1024,64,256,1.505324e-05,1.225405e-06,1
+v4,2,2,stress_logits_std10,1024,64,512,1.514264e-05,1.226915e-06,1

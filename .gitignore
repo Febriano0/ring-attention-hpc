@@ -1,4 +1,3 @@
-
 # Compiled binaries
 *.o
 *.out
@@ -8,7 +7,13 @@
 # Build directories
 build/
 
-# Python cache
+# Large raw sequence downloads (keep small ready-to-demo data/fastq/*.fastq & data/tokens/)
+data/sra/
+*.sra
+*.fastq.gz
+*.fq.gz
+
+# Python cache & virtual environments
 __pycache__/
 *.pyc
 .venv/
@@ -26,6 +31,5 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Experimental outputs
-results/figures/*.png
+# Experimental vector outputs (keep tracked CSVs, summaries, and PNG figures)
 results/figures/*.pdf

@@ -1,0 +1,42 @@
+{
+  "vocab_size": 4098,
+  "d": 64,
+  "num_classes": 2,
+  "train_seq_len": 512,
+  "val_accuracy": 1.0,
+  "val_f1": 1.0,
+  "leave_one_line_out_184AA2_acc": 1.0,
+  "class_names": {
+    "0": "Normal-like",
+    "1": "Progresi Karsinogenesis"
+  },
+  "limitations": "Dataset PRJNA913438 hanya memiliki 1 lini normal (184D) dan 7 lini progresi; evaluasi akurasi merupakan metrik sekunder untuk demonstrasi aplikasi, bukan klaim klinis.",
+  "pytorch_reference_s1024": {
+    "184D_normal": {
+      "input": "data/tokens/184D_normal.bin",
+      "s": 1024,
+      "predicted_class": 0,
+      "logits": [
+        15.993027687072754,
+        -15.400982856750488
+      ],
+      "probs": [
+        1.0,
+        2.3214238962111083e-14
+      ]
+    },
+    "184AA2_aig": {
+      "input": "data/tokens/184AA2_aig.bin",
+      "s": 1024,
+      "predicted_class": 1,
+      "logits": [
+        -15.849687576293945,
+        15.447161674499512
+      ],
+      "probs": [
+        2.5583000480425624e-14,
+        1.0
+      ]
+    }
+  }
+}

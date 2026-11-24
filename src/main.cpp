@@ -1,6 +1,7 @@
 #include "common/attention_types.hpp"
 #include "common/gemm.hpp"
 #include "common/memory_utils.hpp"
+#include "inference/dna_triage.hpp"
 #include "v0_naive/v0_naive.hpp"
 #include "v1_blockwise/v1_blockwise.hpp"
 #include "v2_openmp/v2_openmp.hpp"
@@ -467,9 +468,24 @@ int main(int argc, char** argv) {
         resolve_and_validate_args(args, world_size);
 
         if (!args.weights_dir.empty() || !args.input_path.empty()) {
-            throw std::runtime_error("DNA triage inference mode is added in Milestone 2 (src/inference)");
+            if (args.weights_dir.empty() || args.input_path.empty()) {
+                throw std::invalid_argument("Both --weights and --input are required for DNA triage inference");
+            }
+            const int eff_threads = (args.version == "v2" || args.version == "v4")
+                ? ((args.threads > 0) ? args.threads : omp_get_max_threads())
+                : 1;
+            const ring_attn::RingCommMode ring_mode = args.no_comm
+                ? ring_attn::RingCommMode::NoComm
+                : (args.blocking ? ring_attn::RingCommMode::Blocking : ring_attn::RingCommMode::NonBlocking);
+            ring_attn::TriageConfig tcfg{
+                args.version, args.weights_dir, args.input_path, args.json_out, args.csv_path,
+                args.s, args.d, args.c, args.bq, args.bk, args.sub_block_q, eff_threads, ring_mode
+            };
+            ring_attn::run_dna_triage(tcfg, rss_baseline_kb, MPI_COMM_WORLD);
+            exit_code = 0;
+        } else {
+            exit_code = run_synthetic_benchmark(args, rank, world_size, rss_baseline_kb);
         }
-        exit_code = run_synthetic_benchmark(args, rank, world_size, rss_baseline_kb);
     } catch (const std::bad_alloc& ex) {
         if (rank == 0) {
             std::cerr << "[OOM] rank " << rank << " out of memory: " << ex.what() << "\n";
